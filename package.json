@@ -5,8 +5,11 @@
   "version": "0.1.0",
   "author": "Nader Dabit <dabit3@gmail.com>",
   "dependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
     "@stripe/react-stripe-js": "^1.0.0-beta.6",
     "@stripe/stripe-js": "^1.0.0-beta.8",
+    "aws-amplify": "^4.3.24",
     "axios": "^0.19.2",
     "esm": "^3.2.25",
     "fs": "^0.0.1-security",
@@ -33,6 +36,7 @@
     "react-icons": "^3.9.0",
     "react-toastify": "^5.5.0",
     "reactjs-popup": "^1.5.0",
+    "sharp": "^0.30.6",
     "tailwindcss": "^1.1.4",
     "uuid": "^3.4.0"
   },

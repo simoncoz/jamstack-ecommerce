@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "furnitureapi",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "/Users/simoncoz/projects/jamstack-ecommerce/amplify/backend/api/furnitureapi/schema.graphql",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authjamstackecommercee737595e"
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 100,
+        "apiKeyExpirationDate": "2022-09-21T02:21:21.483Z",
+        "keyDescription": "gatsby"
+      }
+    ]
+  }
+}

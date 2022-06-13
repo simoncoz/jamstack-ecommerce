@@ -1,4 +1,7 @@
 import React from 'react'
+import { Storage, API, graphqlOperation } from 'aws-amplify'
+import { createProduct } from '../../graphql/mutations'
+import uuid from 'uuid/v4'
 
 const initialState = {
   name: '', brand: '', price: '', categories: [], image: '', description: '', currentInventory: ''
@@ -14,16 +17,18 @@ class AddInventory extends React.Component {
   }
   onImageChange = async (e) => {
     const file = e.target.files[0];
-    this.setState({ image: file })
-    // const storageUrl = await Storage.put('example.png', file, {
-    //     contentType: 'image/png'
-    // })
-    // this.setState({ image: storageUrl  })
+    const fileName = uuid() + file.name
+    // save the image in S3 when it's uploaded
+    await Storage.put(fileName, file)
+    this.setState({ image: fileName  })
   }
   addItem = async () => {
     const { name, brand, price, categories, image, description, currentInventory } = this.state
     if (!name || !brand || !price || !categories.length || !description || !currentInventory || !image) return
-    // add to database
+  
+    // create the item in the database
+    const item = { ...this.state, categories: categories.replace(/\s/g, "").split(',') }
+    await API.graphql(graphqlOperation(createProduct, { input: item }))
     this.clearForm()
   }
   render() {

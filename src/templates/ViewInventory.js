@@ -4,6 +4,9 @@ import Image from '../components/Image'
 import { Link } from 'gatsby'
 import { slugify, numberFormat } from '../../utils/helpers'
 import { FaTimes } from 'react-icons/fa'
+import { API, graphqlOperation } from 'aws-amplify'
+import { listProducts } from '../graphql/queries'
+import { updateProduct, deleteProduct } from '../graphql/mutations'
 
 class ViewInventory extends React.Component {
   state = {
@@ -15,22 +18,34 @@ class ViewInventory extends React.Component {
     this.fetchInventory()
   }
   fetchInventory = async() => {
-    const inventory = await getInventory()
-    this.setState({ inventory })
+    const inventoryData = await API.graphql(graphqlOperation(listProducts))
+    const { items } = inventoryData.data.listProducts
+    console.log("inventory items: ", items)
+    this.setState({ inventory: items })
   }
   editItem = (item, index) => {
     const editingIndex = index
     this.setState({ editingIndex, currentItem: item })    
   }
   saveItem = async index => {
+    console.log("saveItem: ", this.state.currentItem)
     const inventory = [...this.state.inventory]
     inventory[index] = this.state.currentItem
-    // update item in database
-    this.setState({ editingIndex: null, inventory })
+    try{
+      await API.graphql(graphqlOperation(updateProduct, { input: this.state.currentItem }))    
+      this.setState({ editingIndex: null, inventory })
+    } catch (e) {
+      console.log("Exception: ", e)
+    }
+    
+    console.log("saveItem END: ", this.state.currentItem)
   }
+  
   deleteItem = async index => {
+    const id = this.state.inventory[index].id
     const inventory = [...this.state.inventory.slice(0, index), ...this.state.inventory.slice(index + 1)]
     this.setState({ inventory })
+    await API.graphql(graphqlOperation(deleteProduct, { input: { id }}))
   }
   onChange = event => {
     const currentItem = {
@@ -72,6 +87,7 @@ class ViewInventory extends React.Component {
                         name="currentInventory"
                         placeholder="Item inventory"
                       />
+                      <p className="m-0 text-sm mr-2">Price:</p>
                       <input
                         onChange={this.onChange}
                         className="ml-16 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "furnitureapi",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authjamstackecommercee737595e",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

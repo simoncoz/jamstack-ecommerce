@@ -1,0 +1,16 @@
+{
+  "resourceName": "contentstorage",
+  "policyUUID": "6c4c6d19",
+  "bucketName": "jamstackecommerceeacd5d53c4194157a1657aa61c4854",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

@@ -1,0 +1,29 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-jamstackecommerce-dev-121351-authRole",
+      "UnauthRoleArn": "arn:aws:iam::268834545153:role/amplify-jamstackecommerce-dev-121351-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::268834545153:role/amplify-jamstackecommerce-dev-121351-authRole",
+      "Region": "ap-southeast-2",
+      "DeploymentBucketName": "amplify-jamstackecommerce-dev-121351-deployment",
+      "UnauthRoleName": "amplify-jamstackecommerce-dev-121351-unauthRole",
+      "StackName": "amplify-jamstackecommerce-dev-121351",
+      "StackId": "arn:aws:cloudformation:ap-southeast-2:268834545153:stack/amplify-jamstackecommerce-dev-121351/785efe60-eabe-11ec-a85f-06479062b646",
+      "AmplifyAppId": "dpf7f62gd2lr5",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-jamstackecommerce-dev-121351-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "jamstackecommercee737595e": {},
+        "true": {}
+      },
+      "function": {
+        "jamstackecommercee737595ePostConfirmation": {
+          "GROUP": "Admin",
+          "deploymentBucketName": "amplify-jamstackecommerce-dev-121351-deployment",
+          "s3Key": "amplify-builds/jamstackecommercee737595ePostConfirmation-656355796a4275416d33-build.zip"
+        }
+      }
+    }
+  }
+}

@@ -1,12 +1,22 @@
 import getInventory from './providers/inventoryProvider.js'
 import { slugify } from './utils/helpers'
+import config from './src/aws-exports'
+import axios from 'axios'
+import tag from 'graphql-tag'
+import fs from 'fs'
+import downloadImage from './utils/downloadImage'
+import Amplify, { Storage } from 'aws-amplify'
+Amplify.configure(config)
+
+const graphql = require('graphql')
+const { print } = graphql
 
 const ItemView = require.resolve('./src/templates/ItemView')
 const CategoryView = require.resolve('./src/templates/CategoryView')
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
-  const inventory = await getInventory()
+  const inventory = await fetchInventory()
 
   createPage({
     path: 'all',
@@ -70,7 +80,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
 exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }) => {
   const { createNode } = actions
-  const inventory = await getInventory()
+  const inventory = await fetchInventory()
 
   /* create nav info for categories */ 
   const categoryNames = inventory.reduce((acc, next) =>  {
@@ -165,4 +175,58 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }) => 
 
   const inventoryNode = Object.assign({}, inventoryData, inventoryNodeMeta)
   createNode(inventoryNode)
+
+  
+}
+
+async function fetchInventory() {
+  /* new */
+  const listProductsQuery = tag(`
+    query listProducts {
+      listProducts(limit: 500) {
+        items {
+          id
+          categories
+          price
+          name
+          image
+          description
+          currentInventory
+          brand
+        }
+      }
+    }
+  `)
+  const gqlData = await axios({
+    url: config.aws_appsync_graphqlEndpoint,
+    method: 'post',
+    headers: {
+      'x-api-key': config.aws_appsync_apiKey
+    },
+    data: {
+      query: print(listProductsQuery)
+    }
+  })
+
+  let inventory = gqlData.data.data.listProducts.items
+
+  if (!fs.existsSync(`${__dirname}/public/downloads`)){
+    fs.mkdirSync(`${__dirname}/public/downloads`);
+  }
+
+  await Promise.all(
+    inventory.map(async (item, index) => {
+      try {
+        const relativeUrl = `../downloads/${item.image}`
+        if (!fs.existsSync(`${__dirname}/public/downloads/${item.image}`)) {
+          const image = await Storage.get(item.image)
+          await downloadImage(image)
+        }
+        inventory[index].image = relativeUrl
+      } catch (err) {
+        console.log('error downloading image: ', err)
+      }
+    })
+  )
+  return inventory
 }

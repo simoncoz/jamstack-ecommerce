@@ -10,6 +10,7 @@ import { graphql } from 'gatsby'
 const Home = ({ data: gqlData }) => {
   const { inventoryInfo, categoryInfo: { data }} = gqlData
   const categories = data.slice(0, 2)
+  console.log("data:", data)
   const inventory = inventoryInfo.data.slice(0, 4)
 
   return (
